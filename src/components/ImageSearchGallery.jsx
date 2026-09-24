@@ -2,15 +2,12 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Search, Loader2, Download, ExternalLink, Plus, Globe, Layers, Link as LinkIcon } from 'lucide-react';
 
-// Component từng ô ảnh: Đồng bộ Dark Mode, responsive mượt mà
 function ImageCard({ item }) {
   const [hasError, setHasError] = useState(false);
   const [retried, setRetried] = useState(false);
   const [currentSrc, setCurrentSrc] = useState(item.thumbnailUrl || item.imageUrl);
 
-  if (hasError) {
-    return null;
-  }
+  if (hasError) return null;
 
   const handleError = () => {
     if (!retried) {
@@ -180,70 +177,70 @@ export default function ImageSearchGallery() {
 
   return (
     <div className="w-full max-w-full flex-1 flex flex-col items-center">
-      {/* Tab chuyển đổi chế độ */}
-      <div className="w-full max-w-xl mx-auto mb-3 px-1">
-        <div className="flex bg-slate-900/90 p-1 rounded-xl border border-slate-800">
+      {/* Khung chuyển chế độ & Input */}
+      <div className="w-full max-w-xl mx-auto mb-6 px-1 flex flex-col items-center">
+        {/* Tab 2 nút chia 50/50 */}
+        <div className="grid grid-cols-2 bg-slate-900/90 p-1 rounded-xl border border-slate-800 w-full mb-3">
           <button
             type="button"
             onClick={() => setMode('keyword')}
-            className={`flex-1 py-1.5 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition ${
-              mode === 'keyword' ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-slate-200'
+            className={`py-2 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition cursor-pointer ${
+              mode === 'keyword' ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-white'
             }`}
           >
             <Search size={14} />
-            Tìm theo từ khóa
+            Từ khóa
           </button>
           <button
             type="button"
             onClick={() => setMode('url')}
-            className={`flex-1 py-1.5 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition ${
-              mode === 'url' ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-slate-200'
+            className={`py-2 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition cursor-pointer ${
+              mode === 'url' ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-white'
             }`}
           >
             <LinkIcon size={14} />
-            Bóc ảnh từ Link Web
+            Bóc từ Link Web
           </button>
         </div>
-      </div>
 
-      {/* Khu vực input & chọn nguồn */}
-      <div className="w-full max-w-xl mx-auto mb-5 px-1">
+        {/* Khung nhập liệu */}
         {mode === 'keyword' ? (
-          <>
-            <form onSubmit={handleSearchSubmit} className="flex items-center gap-2 w-full">
-              <div className="relative flex-1">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                <input
-                  type="text"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Nhập từ khóa hình ảnh..."
-                  style={{ 
-                    color: '#0f172a', 
-                    backgroundColor: '#ffffff',
-                    WebkitTextFillColor: '#0f172a' 
-                  }}
-                  className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all shadow-sm"
-                />
-              </div>
+          <div className="w-full">
+            <form onSubmit={handleSearchSubmit} className="w-full relative flex items-center">
+              <Search 
+                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" 
+                size={18} 
+              />
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Nhập từ khóa hình ảnh..."
+                style={{ 
+                  color: '#0f172a', 
+                  backgroundColor: '#ffffff',
+                  WebkitTextFillColor: '#0f172a' 
+                }}
+                className="w-full pl-10 pr-20 py-3 bg-white border border-slate-300 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/30 shadow-sm"
+              />
               <button
                 type="submit"
                 disabled={loading}
-                className="px-4 sm:px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition flex items-center gap-1.5 shrink-0 disabled:opacity-50 cursor-pointer shadow-md shadow-blue-600/20"
+                className="absolute right-1.5 top-1.5 bottom-1.5 px-4 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-xs font-bold rounded-xl transition flex items-center justify-center gap-1.5 shrink-0 disabled:opacity-50 cursor-pointer shadow"
               >
-                {loading ? <Loader2 size={16} className="animate-spin" /> : 'Tìm'}
+                {loading ? <Loader2 size={15} className="animate-spin" /> : 'Tìm'}
               </button>
             </form>
 
-            {/* Dãy nút nguồn */}
-            <div className="flex items-center justify-center gap-2 mt-3 overflow-x-auto no-scrollbar py-1 w-full">
+            {/* 2 nút nguồn chia đều 50/50 */}
+            <div className="grid grid-cols-2 gap-2 mt-3.5 w-full">
               <button
                 type="button"
                 onClick={() => handleEngineChange('bing')}
-                className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer border ${
+                className={`flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-semibold border transition cursor-pointer ${
                   engine === 'bing'
-                    ? 'bg-blue-600 text-white border-blue-500 shadow-sm shadow-blue-500/30'
-                    : 'bg-slate-900/80 text-slate-400 border-slate-800 hover:bg-slate-800 hover:text-slate-200'
+                    ? 'bg-blue-600 text-white border-blue-500 shadow-md shadow-blue-500/20'
+                    : 'bg-slate-900/90 text-slate-400 border-slate-800 hover:bg-slate-800'
                 }`}
               >
                 <Globe size={13} />
@@ -252,40 +249,41 @@ export default function ImageSearchGallery() {
               <button
                 type="button"
                 onClick={() => handleEngineChange('yandex')}
-                className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer border ${
+                className={`flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-semibold border transition cursor-pointer ${
                   engine === 'yandex'
-                    ? 'bg-blue-600 text-white border-blue-500 shadow-sm shadow-blue-500/30'
-                    : 'bg-slate-900/80 text-slate-400 border-slate-800 hover:bg-slate-800 hover:text-slate-200'
+                    ? 'bg-blue-600 text-white border-blue-500 shadow-md shadow-blue-500/20'
+                    : 'bg-slate-900/90 text-slate-400 border-slate-800 hover:bg-slate-800'
                 }`}
               >
                 <Layers size={13} />
                 Nguồn 2
               </button>
             </div>
-          </>
+          </div>
         ) : (
-          <form onSubmit={handleExtractFromUrl} className="flex items-center gap-2 w-full">
-            <div className="relative flex-1">
-              <LinkIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-              <input
-                type="text"
-                value={urlInput}
-                onChange={(e) => setUrlInput(e.target.value)}
-                placeholder="Dán link website (VD: https://vnexpress.net)..."
-                style={{ 
-                  color: '#0f172a', 
-                  backgroundColor: '#ffffff',
-                  WebkitTextFillColor: '#0f172a' 
-                }}
-                className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all shadow-sm"
-              />
-            </div>
+          <form onSubmit={handleExtractFromUrl} className="w-full relative flex items-center">
+            <LinkIcon 
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" 
+              size={18} 
+            />
+            <input
+              type="text"
+              value={urlInput}
+              onChange={(e) => setUrlInput(e.target.value)}
+              placeholder="Dán link website (VD: https://vnexpress.net)..."
+              style={{ 
+                color: '#0f172a', 
+                backgroundColor: '#ffffff',
+                WebkitTextFillColor: '#0f172a' 
+              }}
+              className="w-full pl-10 pr-24 py-3 bg-white border border-slate-300 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/30 shadow-sm"
+            />
             <button
               type="submit"
               disabled={loading}
-              className="px-4 sm:px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl transition flex items-center gap-1.5 shrink-0 disabled:opacity-50 cursor-pointer shadow-md shadow-emerald-600/20"
+              className="absolute right-1.5 top-1.5 bottom-1.5 px-4 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-bold rounded-xl transition flex items-center justify-center gap-1.5 shrink-0 disabled:opacity-50 cursor-pointer shadow"
             >
-              {loading ? <Loader2 size={16} className="animate-spin" /> : 'Bóc ảnh'}
+              {loading ? <Loader2 size={15} className="animate-spin" /> : 'Bóc ảnh'}
             </button>
           </form>
         )}
@@ -305,14 +303,14 @@ export default function ImageSearchGallery() {
         </div>
       )}
 
-      {/* Lưới ảnh: 2 cột trên điện thoại, 3 cột tablet, 4 cột desktop */}
+      {/* Lưới ảnh */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 sm:gap-4 w-full">
         {images.map((item, idx) => (
           <ImageCard key={`${item.imageUrl}-${idx}`} item={item} />
         ))}
       </div>
 
-      {/* Nút bấm tải thêm */}
+      {/* Tải thêm */}
       {mode === 'keyword' && images.length > 0 && hasMore && (
         <div className="text-center my-6">
           <button
